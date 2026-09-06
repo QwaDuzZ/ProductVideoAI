@@ -92,6 +92,7 @@ export function AuthForm({ mode, onModeChange }: AuthFormProps) {
                 onChange={(e) => setEmail(e.target.value)}
                 className="input w-full"
                 placeholder="you@example.com"
+                autoComplete="email"
                 required
               />
             </div>
@@ -99,15 +100,16 @@ export function AuthForm({ mode, onModeChange }: AuthFormProps) {
             {mode !== "forgot" && (
               <div>
                 <label className="block text-sm text-fog mb-2">Пароль</label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="input w-full"
-                  placeholder="••••••••"
-                  required
-                  minLength={6}
-                />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="input w-full"
+                placeholder="••••••••"
+                autoComplete={mode === "login" ? "current-password" : "new-password"}
+                required
+                minLength={6}
+              />
               </div>
             )}
 

@@ -43,6 +43,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error.message.includes("Invalid login")) {
         return { error: "Неверный email или пароль" };
       }
+      if (error.message.includes("rate_limit") || error.message.includes("Too Many")) {
+        return { error: "Слишком много попыток. Подождите 60 секунд." };
+      }
       return { error: error.message };
     }
     return {};
@@ -53,6 +56,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (error) {
       if (error.message.includes("already registered")) {
         return { error: "Пользователь с таким email уже существует" };
+      }
+      if (error.message.includes("rate_limit") || error.message.includes("Too Many")) {
+        return { error: "Слишком много попыток. Подождите 60 секунд." };
       }
       return { error: error.message };
     }
