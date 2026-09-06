@@ -1,0 +1,104 @@
+[project]
+# A string used to distinguish different Supabase projects.
+id = "productvideoai"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[studio]
+enabled = true
+port = 54323
+api_url = "http://localhost"
+
+[inbucket]
+enabled = true
+port = 54324
+smtp_port = 54325
+pop3_port = 54326
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["https://localhost:3000"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+refresh_token_reuse_interval = 10
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = false
+
+[auth.external.google]
+enabled = false
+client_id = ""
+secret = ""
+redirect_uri = ""
+
+[analytics]
+enabled = false
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[db.pooler]
+enabled = true
+port = 54329
+pool_mode = "transaction"
+default_pool_size = 20
+max_client_conn = 100
+
+[experimental]
+# Enable if you need Edge Functions local development
+
+[functions]
+# Directory with Edge Functions source code
+directory = "functions"
+
+# Map of function name -> required secrets
+[functions.create-project]
+verify_jwt = true
+
+[functions.generate-script]
+verify_jwt = true
+
+[functions.generate-tts]
+verify_jwt = true
+
+[functions.generate-video]
+verify_jwt = true
+
+[functions.start-upscale]
+verify_jwt = true
+
+[functions.start-audio-mix]
+verify_jwt = true
+
+[functions.start-outro]
+verify_jwt = true
+
+[functions.webhook-payment]
+verify_jwt = false
+
+[functions.webhook-replicate]
+verify_jwt = false
+
+[functions.send-project-event]
+verify_jwt = false
+
+[functions.internal-media-completed]
+verify_jwt = false
+
+[functions.poll-async-jobs]
+verify_jwt = true

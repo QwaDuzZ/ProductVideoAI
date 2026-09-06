@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment
+.env
+.env.local
+.env.*.local
+!/.env.example
+
+# Build
+dist/
+build/
+.vite/
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Supabase
+supabase/.temp/
+supabase/.branches/
+
+# Worker
+worker/.env
+worker/dist/
+worker/.cache/
+
+# Frontend
+frontend/dist/
+frontend/.vite/
+
+# Temp files
+/tmp/
+*.tmp
+
+# Logs
+*.log
+npm-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Secrets - NEVER commit
+*.pem
+*.key
+*-secret.json
+service-account*.json

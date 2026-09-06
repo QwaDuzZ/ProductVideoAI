@@ -1,0 +1,29 @@
+{
+  "name": "productvideoai",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "worker"
+  ],
+  "scripts": {
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:worker": "npm run dev --workspace=worker",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build:worker": "npm run build --workspace=worker",
+    "lint": "npm run lint --workspaces --if-present",
+    "lint:fix": "npm run lint:fix --workspaces --if-present",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check-secrets": "bash scripts/check-secrets.sh",
+    "migrate": "npx supabase db push",
+    "test": "vitest run",
+    "test:migrations": "vitest run tests/migrations.test.ts",
+    "test:all": "npm run test:migrations && npm run test --workspace=frontend && npm run test --workspace=worker"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.0",
+    "typescript": "^5.7.0",
+    "vitest": "^5.0.0"
+  }
+}
