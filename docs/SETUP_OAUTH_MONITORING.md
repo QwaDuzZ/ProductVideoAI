@@ -1,144 +1,94 @@
-# Setup Guide: Google OAuth, Better Stack, Sentry
+# Настройка: Google OAuth + Мониторинг
 
-## 1. Google OAuth (Вход через Google)
+---
 
-### Шаг 1: Google Cloud Console
+## 1. Вход через Google
 
-1. Открой [Google Cloud Console](https://console.cloud.google.com/home/dashboard)
-2. Создай новый проект (или выбери существующий):
-   - Название: `ProductVideoAI`
-   - Нажми **Create**
-3. Перейди в [OAuth consent screen](https://console.cloud.google.com/auth/overview):
-   - Выбери **External** → нажми **Create**
+Google OAuth работает через Supabase — ты создаёшь Client ID в Google, вставляешь его в Supabase, и кнопка "Войти через Google" уже работает в коде.
+
+### Что сделать (10 минут):
+
+**A. Google Cloud Console**
+
+1. Открой https://console.cloud.google.com/home/dashboard
+2. Создай проект → название: `ProductVideoAI`
+3. Перейди в **APIs & Services** → **OAuth consent screen**:
+   - User type: **External**
    - App name: `ProductVideoAI`
-   - User support email: `qwadu01@gmail.com`
-   - Developer contact: `qwadu01@gmail.com`
-   - Нажми **Save and Continue**
-4. На странице **Scopes** нажми **Add or Remove Scopes**:
-   - Добавь: `openid`, `email`, `profile`
-   - Нажми **Update** → **Save and Continue**
-5. На странице **Test users**:
-   - Добавь свой email: `qwadu01@gmail.com`
-   - Нажми **Save and Continue**
-6. Перейди в [Clients](https://console.cloud.google.com/auth/clients):
-   - Нажми **Create Credentials** → **OAuth client ID**
-   - Application type: **Web application**
-   - Name: `ProductVideoAI Web`
+   - Email: `qwadu01@gmail.com`
+   - Scopes: добавь `openid`, `email`, `profile`
+   - Test users: добавь `qwadu01@gmail.com`
+4. Перейди в **Credentials** → **Create Credentials** → **OAuth client ID**:
+   - Type: **Web application**
+   - Name: `ProductVideoAI`
    - **Authorized JavaScript origins**:
      - `https://product-video-ai-frontend.vercel.app`
-     - `http://localhost:3000` (для разработки)
+     - `http://localhost:3000`
    - **Authorized redirect URIs**:
      - `https://ymudwflztglwbrfxjaxt.supabase.co/auth/v1/callback`
-   - Нажми **Create**
-   - **Скопируй Client ID и Client Secret** — они понадобятся далее
+5. Нажми **Create** → **скопируй Client ID и Client Secret**
 
-### Шаг 2: Supabase Dashboard
+**B. Supabase Dashboard**
 
-1. Открой [Supabase Dashboard → Auth → Providers](https://supabase.com/dashboard/project/ymudwflztglwbrfxjaxt/auth/providers)
-2. Найди **Google** и нажми **Enable**
-3. Вставь:
-   - **Client ID**: (из Google Cloud Console)
-   - **Client Secret**: (из Google Cloud Console)
-4. Нажми **Save**
+1. Открой https://supabase.com/dashboard/project/ymudwflztglwbrfxjaxt/auth/providers
+2. Найди **Google** → **Enable**
+3. Вставь Client ID и Client Secret → **Save**
+4. Перейди в https://supabase.com/dashboard/project/ymudwflztglwbrfxjaxt/auth/url-configuration
+5. В **Redirect URLs** добавь: `https://product-video-ai-frontend.vercel.app`
+6. **Save**
 
-### Шаг 3: Supabase Redirect URLs
+**C. Готово**
 
-1. Перейди в [Auth → URL Configuration](https://supabase.com/dashboard/project/ymudwflztglwbrfxjaxt/auth/url-configuration)
-2. В **Redirect URLs** добавь:
-   - `https://product-video-ai-frontend.vercel.app`
-   - `http://localhost:3000` (для разработки)
-3. Нажми **Save**
-
-### Шаг 4: Тест
-
-1. Открой сайт: https://product-video-ai-frontend.vercel.app
-2. Нажми **"Войти через Google"**
-3. Должен открыться Google consent screen
-4. После авторизации — редирект обратно на сайт
+Кнопка "Войти через Google" уже есть на экране входа. Открой сайт → нажми → Google consent → редирект обратно.
 
 ---
 
-## 2. Better Stack (Мониторинг инцидентов)
+## 2. Better Stack — мониторинг сайта
 
-**Что даёт (бесплатно):**
-- 10 мониторингов (Uptime checks)
+**Зачем:** если сайт ляжет или будет недоступен — ты получишь уведомление в Telegram. Бесплатно.
+
+**Что входит (бесплатно):**
+- Uptime мониторинг (каждые 30 сек проверяет доступность)
 - 100,000 ошибок/мес
 - 5,000 session replay
-- 3 GB логов (3 дня)
-- Slack & Email алерты
-- Status page
+- Алерты в Telegram и Email
 
-### Шаг 1: Регистрация
+### Настройка:
 
-1. Открой [betterstack.com](https://betterstack.com/)
-2. Нажми **Get Started — It's Free**
-3. Зарегистрируйся через Google или email
-
-### Шаг 2: Создай Uptime Monitor
-
-1. В Dashboard нажми **Uptime** → **Create Monitor**
-2. Monitor type: **HTTP(S)**
+1. Зарегистрируйся на https://betterstack.com (через Google)
+2. Перейди в **Uptime** → **Create Monitor**
 3. URL: `https://product-video-ai-frontend.vercel.app`
-4. Check interval: **30 seconds**
-5. Locations: **Europe** (ближе к серверам Supabase)
-6. Нажми **Create Monitor**
+4. Интервал: **30 seconds** → **Create Monitor**
 
-### Шаг 3: Настрой алерты
-
-1. Перейди в **Settings** → **Alerts**
-2. Добавь email: `qwadu01@gmail.com`
-3. (Опционально) Подключи Telegram:
-   - Создай бота через [@BotFather](https://t.me/BotFather)
-   - Скопируй токен
-   - В Better Stack: **Settings** → **Integrations** → **Telegram**
-   - Вставь токен и Chat ID
-
-### Шаг 4: Мониторинг Edge Functions
-
-Создай дополнительные мониторы для критических Edge Functions:
-- `https://ymudwflztglwbrfxjaxt.supabase.co/functions/v1/health`
-- (Добавь health check endpoint в Edge Functions при необходимости)
+**Подключи Telegram:**
+1. Создай бота через [@BotFather](https://t.me/BotFather) → получи токен
+2. В Better Stack: **Settings** → **Integrations** → **Telegram**
+3. Вставь токен и Chat ID
+4. Теперь при任何 проблемах с сайтом — уведомление прилетает в Telegram
 
 ---
 
-## 3. Sentry (Отслеживание ошибок клиент/сервер)
+## 3. Sentry — отслеживание ошибок
 
-**Что даёт (бесплатно):**
-- 5,000 ошибок/мес
-- Performance monitoring
-- Session replay
-- Source maps (для React)
-- Alerting
+**Зочем:** если у клиента что-то сломалось — ты увидишь ошибку сразу: строку кода, стек, контекст. Бесплатно до 5,000 ошибок/мес.
 
-### Шаг 1: Регистрация
+### Настройка:
 
-1. Открой [sentry.io](https://sentry.io/welcome/)
-2. Нажми **Get Started**
-3. Выбери **React** как.platform
-4. Зарегистрируйся
-
-### Шаг 2: Создай проект
-
-1. В Sentry Dashboard: **Projects** → **Create Project**
-2. Platform: **React**
-3. Project name: `productvideoai-frontend`
-4. Нажми **Create Project**
-5. Sentry покажи инструкцию установки — тебе нужен **DSN**
-
-### Шаг 3: Установка в frontend
-
+1. Зарегистрируйся на https://sentry.io (через Google)
+2. Создай проект: **Platform** → React, название: `productvideoai-frontend`
+3. Скопируй **DSN** (после создания проекта)
+4. Установи:
 ```bash
 cd frontend
 npm install @sentry/react
 ```
 
-Добавь в `frontend/src/main.tsx` (в начало файла, до `ReactDOM.createRoot`):
-
+5. Добавь в `frontend/src/main.tsx` (в самое начало файла):
 ```tsx
 import * as Sentry from "@sentry/react";
 
 Sentry.init({
-  dsn: "YOUR_SENTRY_DSN", // Вставь свой DSN из Sentry Dashboard
+  dsn: "ВСТАВЬ_СВОЙ_DSN",
   integrations: [
     Sentry.browserTracingIntegration(),
     Sentry.replayIntegration(),
@@ -149,58 +99,19 @@ Sentry.init({
 });
 ```
 
-### Шаг 4: Sentry для Backend (Edge Functions + Worker)
+6. В Sentry: **Settings** → **Notifications** → добавь email `qwadu01@gmail.com`
 
-1. В Sentry: **Projects** → **Create Project** → **Node.js**
-2. Project name: `productvideoai-backend`
-3. Установи в worker:
-```bash
-cd worker
-npm install @sentry/node
-```
-
-4. В `worker/src/index.ts` (в начало):
-```tsx
-import * as Sentry from "@sentry/node";
-
-Sentry.init({
-  dsn: "YOUR_BACKEND_SENTRY_DSN",
-  tracesSampleRate: 1.0,
-});
-```
-
-### Шаг 5: Настрой алерты
-
-1. В Sentry: **Settings** → **Notifications**
-2. Добавь email: `qwadu01@gmail.com`
-3. Настрой правила:
-   - **New Issue** → Email (сразу)
-   - **Regression** → Email
-   - **Rate Spike** → Email
-
----
-
-## Итого: что настроить
-
-| Сервис | Что делаешь | Где |
-|--------|-------------|-----|
-| Google OAuth | Создаёшь Client ID + Secret | Google Cloud Console |
-| Google OAuth | Вставляешь в Supabase | Supabase Dashboard → Auth → Providers |
-| Better Stack | Регистрируешься + мониторишь сайт | betterstack.com |
-| Sentry | Регистрируешься + ставишь DSN | sentry.io |
-
-### env vars для Vercel (не нужно — код использует Supabase auth напрямую)
-
-Google OAuth работает через Supabase SDK, поэтому клиент ID не нужен в env vars — Supabase хранит его на сервере.
+**Готово.** Теперь любая ошибка в браузере пользователя автоматически попадает в Sentry с точным местом в коде.
 
 ---
 
 ## Админ-аккаунт
 
-Email: `qwadu01@gmail.com`
-Роль: `admin` (назначается в базе после регистрации)
+- Email: `qwadu01@gmail.com`
+- Роль: `admin`
+- Пароль: задаётся при регистрации
 
-После регистрации через Google или email+пароль, роль `admin` прописывается запросом:
+После регистрации, роль `admin` назначается в Supabase Dashboard → SQL Editor:
 ```sql
 UPDATE profiles SET role = 'admin' WHERE id = (SELECT id FROM auth.users WHERE email = 'qwadu01@gmail.com');
 ```
@@ -209,13 +120,8 @@ UPDATE profiles SET role = 'admin' WHERE id = (SELECT id FROM auth.users WHERE e
 
 ## Частые ошибки
 
-### 429 Too Many Requests
-Supabase блокирует на 60 сек при частых попытках входа/регистрации. Подождите и попробуйте снова.
-
-### Email confirmation
-По умолчанию Supabase отправляет письмо с подтверждением при регистрации. Чтобы отключить для разработки:
-1. Supabase Dashboard → **Authentication** → **Providers** → **Email**
-2. Убери галочку **Confirm email** (или оставь включённой для продакшена)
-
-### Autocomplete warning
-Браузер предупреждает об отсутствии `autocomplete` атрибутов — исправлено в коде.
+| Ошибка | Решение |
+|--------|---------|
+| **429 Too Many Requests** | Supabase блокирует на 60 сек. Подожди и попробуй снова. |
+| **Email confirmation** | Supabase отправляет письмо при регистрации. Чтобы отключить: Dashboard → Auth → Providers → Email → убери "Confirm email" |
+| **Google "redirect_uri_mismatch"** | Проверь что Redirect URI в Google Cloud Console совпадает с `https://ymudwflztglwbrfxjaxt.supabase.co/auth/v1/callback` |
