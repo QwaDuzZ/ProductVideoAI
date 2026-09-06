@@ -228,41 +228,6 @@ serve(async (req) => {
 });
 
 async function generateTTS(voiceId: string, text: string): Promise<ArrayBuffer> {
-      } catch (error) {
-        lastError = error instanceof Error ? error : new Error("Unknown error");
-        console.error(`[generate-tts] Attempt ${attempt + 1} failed:`, lastError.message);
-      }
-    }
-
-    await supabase.rpc("refund_project_credits", {
-      p_project_id: project_id,
-    });
-
-    await supabase
-      .from("projects")
-      .update({
-        status: "failed",
-        error_code: "TTS_FAILED",
-      })
-      .eq("id", project_id);
-
-    return new Response(JSON.stringify({
-      error_code: "TTS_FAILED",
-      user_message: "Не удалось сгенерировать озвучку. Кредиты возвращены.",
-    }), {
-      status: 502,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  } catch (error) {
-    console.error(error);
-    return new Response(JSON.stringify({ error_code: "INTERNAL_ERROR" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  }
-});
-
-async function generateTTS(voiceId: string, text: string): Promise<ArrayBuffer> {
   const apiKey = Deno.env.get("ELEVENLABS_API_KEY");
   if (!apiKey) throw new Error("ELEVENLABS_API_KEY not set");
 
