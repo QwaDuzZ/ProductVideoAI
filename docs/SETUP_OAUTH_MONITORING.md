@@ -204,3 +204,18 @@ Email: `qwadu01@gmail.com`
 ```sql
 UPDATE profiles SET role = 'admin' WHERE id = (SELECT id FROM auth.users WHERE email = 'qwadu01@gmail.com');
 ```
+
+---
+
+## Частые ошибки
+
+### 429 Too Many Requests
+Supabase блокирует на 60 сек при частых попытках входа/регистрации. Подождите и попробуйте снова.
+
+### Email confirmation
+По умолчанию Supabase отправляет письмо с подтверждением при регистрации. Чтобы отключить для разработки:
+1. Supabase Dashboard → **Authentication** → **Providers** → **Email**
+2. Убери галочку **Confirm email** (или оставь включённой для продакшена)
+
+### Autocomplete warning
+Браузер предупреждает об отсутствии `autocomplete` атрибутов — исправлено в коде.
